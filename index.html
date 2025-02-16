@@ -11,10 +11,11 @@
         <div class="bg-white w-96 h-auto rounded-2xl">
             <h3 class="text-xl font-semibold my-2 mx-4">Products🛍️</h3>
             <hr>
-            <div class="flex justify-between items-center mx-6 my-6">
+            <div class="productsDiv">
+              <!-- <div class="flex justify-between items-center mx-6 my-6">
                 <p>Product 1 - $23 </p>
                 <button class="px-5 py-1 bg-pink-600 text-white rounded-2xl p1Add">Add cart</button>
-            </div>
+              </div>
             <div class="flex justify-between items-center mx-6 my-6">
                 <p>Product 2 - $56 </p>
                 <button class="px-5 py-1 bg-pink-600 text-white rounded-2xl p2Add">Add cart</button>
@@ -22,23 +23,23 @@
             <div class="flex justify-between items-center mx-6 my-6">
                 <p>Product 3 - $32 </p>
                 <button class="px-5 py-1 bg-pink-600 text-white rounded-2xl p3Add">Add cart</button>
+            </div> -->
             </div>
             <hr class="hidden divider1">
-            <div class="flex flex-col justify-between hidden mx-4 my-6 cartDiv">
+            <div class="flex flex-col justify-between mx-4 my-6">
               <div class="flex flex-col justify-center items-start mx-2 gap-3 py-6 px-6 border-2 border-black rounded-2xl">
                 <p class="self-center font-bold text-sm mb-2">CART🛒</p>
-                <p>P1 => $23 * <input type="text" class="product1 w-6 h-6 border-2 border-black text-center rounded-md text-sm font-semibold"> = <span class="p1Total"></span></p>
-                <p>P2 => $56 * <input type="text" class="product2 w-6 h-6 border-2 border-black text-center rounded-md text-sm font-semibold"> = <span class="p2Total"></span></p>
-                <p>P3 => $32 * <input type="text" class="product3 w-6 h-6 border-2 border-black text-center rounded-md text-sm font-semibold"> = <span class="p3Total"></span></p>
+                <p class="self-center py-6 text-center text-red-600 emptyCart font-semibold text-lg">Your cart is empty</p>
+                <div class="cartDiv">
+
+                </div>
               </div>
-              <div class="flex flex-col justify-center items-end gap-3 my-6 mr-4 ">
+              <div class="flex flex-col justify-center items-end gap-3 my-6 mr-4 hidden priceDes ">
                 <p class="font-semibold">Quantity : <span class="totalQuant">0</span></p>
                 <p class="font-semibold">Total Amount : <span class="totalAmount">💰0</span></p>
                 <button class="py-2 px-6 rounded-2xl bg-sky-400 text-white font-semibold mt-2 Checkout">Checkout</button>
               </div>
             </div>
-            <hr class="divider2 hidden">
-            <p class="py-6 text-center text-red-600 hidden emptyCart">Your cart is empty</p>
         </div>
     </div>
   </body>

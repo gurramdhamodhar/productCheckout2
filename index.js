@@ -1,86 +1,120 @@
-//add cart btns
-let p1Add = document.querySelector(".p1Add");
-let p2Add = document.querySelector(".p2Add");
-let p3Add = document.querySelector(".p3Add");
-let divider1 = document.querySelector(".divider1");
+document.addEventListener("DOMContentLoaded", () => {
+    let productsDiv = document.querySelector(".productsDiv");
+    let totalQuant = document.querySelector(".totalQuant");
+    let cartDiv = document.querySelector(".cartDiv");
+    let emptyCart = document.querySelector(".emptyCart");
+    let priceDesDiv = document.querySelector(".priceDes");
+    let totalAmount = document.querySelector(".totalAmount");
 
-let cartDiv = document.querySelector(".cartDiv");
+    let products = [
+        {id : 1, name : "Jeans" , price: 100},
+        {id : 2, name : "Shirt" , price: 200},
+        {id : 3, name : "Watch" , price: 300}
+    ]
 
-//productQuant
-let product1 = document.querySelector(".product1");
-let product2 = document.querySelector(".product2");
-let product3 = document.querySelector(".product3");
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];    
+    let totalPrice = JSON.parse(localStorage.getItem("totalPrice")) || [];
 
-let p1Total = document.querySelector(".p1Total");
-let p2Total = document.querySelector(".p2Total");
-let p3Total = document.querySelector(".p3Total");
+    products.forEach(product => {
+        let div = document.createElement("div");
+        div.classList.add("flex", "justify-between", "items-center", "mx-6", "my-6");
+        let p = document.createElement("p");
+        p.innerText = `${product.name} - $${product.price.toFixed(0)}`;
+        let button = document.createElement("button");
+        button.classList.add("px-5", "py-1", "bg-pink-600", "text-white", "rounded-2xl");
+        button.innerText = "Add cart";
+        button.setAttribute("data-id", product.id);
+        div.appendChild(p);
+        div.appendChild(button);
+        productsDiv.appendChild(div);
+    });
 
-let totalQuant = document.querySelector(".totalQuant");
-let totalAmount = document.querySelector(".totalAmount");
+    productsDiv.addEventListener("click", (e) => {
+        if(e.target.tagName === "BUTTON"){
+            const productId = parseInt(e.target.getAttribute("data-id"));
+            let product = products.find(p => p.id === productId);
+            addTocart(product);               
+        }
+    });
 
-let Checkout = document.querySelector(".Checkout");
+    function addTocart(product) {
+        cart.push(product);       
+        totalPrice.push(product.price);
+        renderCart(product);
+        save(); 
+    }
 
-let divider2 = document.querySelector(".divider2");
-let emptyCart = document.querySelector(".emptyCart");
 
-let totalP1 = 0;
-let totalP2 = 0;
-let totalP3 = 0;
+    cart.forEach(product => renderCart(product));
 
-let count1 = 0;
-p1Add.addEventListener("click", () => {
-    unhidden();
-    count1++;
-    product1.value = count1;
-    Quantity()
-    totalP1 = count1*23;
-    p1Total.textContent = `$${totalP1}`;
-    totalMoney();
-});
+    function renderCart(product) {
+        totalQuant.textContent = "";
+        totalAmount.textContent = "";
+        if (cart.length > 0) {
 
-let count2 = 0;
-p2Add.addEventListener("click", () => {
-    unhidden();
-    count2++;
-    product2.value = count2;
-    Quantity()
-    totalP2 = count2*56;
-    p2Total.textContent = `$${totalP2}`;
-    totalMoney();
-});
+            emptyCart.classList.add("hidden");
+            priceDesDiv.classList.remove("hidden");
+            totalQuant.textContent = cart.length;
+            let div = document.createElement("div");
+            div.classList.add("flex", "flex-row", "justify-start", "items-center", "gap-1");
+            
+            let p = document.createElement("p");
+            p.textContent = `${product.name}`;
+            
+            let span = document.createElement("span");
+            span.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0 0 48 48">
+                <path fill="#F44336" d="M21.5 4.5H26.501V43.5H21.5z" transform="rotate(45.001 24 24)"></path>
+                <path fill="#F44336" d="M21.5 4.5H26.5V43.501H21.5z" transform="rotate(135.008 24 24)"></path>
+            </svg>`;
+            div.appendChild(p);
+            div.appendChild(span);
+            cartDiv.appendChild(div);
+            totalAmount.textContent = `💰${sum()}`;
+            span.addEventListener("click", () => {
+                let index = cart.findIndex(p => p.name == product.name);
+                if(index > -1){
+                    cart.splice(index,1);
+                    totalPrice.splice(index,1);
+                    div.remove();
+                    totalQuant.textContent = cart.length;
+                    totalAmount.textContent = `💰${sum()}`;
+                    save();
+                }
+                if (cart.length === 0) {
+                    emptyCart.classList.remove("hidden");
+                    priceDesDiv.classList.add("hidden");
+                }
+            });
+        } else {
+            emptyCart.classList.remove("hidden");
+            priceDesDiv.classList.add("hidden");
+        }
+    }
 
-let count3 = 0; 
-p3Add.addEventListener("click", () => {
-    unhidden();
-    count3++;
-    product3.value = count3;
-    Quantity()
-    totalP3 = count3*32;
-    p3Total.textContent = `$${totalP3}`;
-    totalMoney();
-});
 
-function unhidden(){
-    divider1.classList.remove("hidden");
-    cartDiv.classList.remove("hidden");
-}
+    function sum(){
+        let sum = 0;
+        for (let i = 0; i < totalPrice.length; i++) {
+            sum += totalPrice[i];
+        }
+        return sum;
+    }
 
-function Quantity() {
-    let q1 = product1.value.trim(); 
-    let q2 = product2.value.trim(); 
-    let q3 = product3.value.trim();
-    let totalqan = Number(q1) + Number(q2) + Number(q3);
-    totalQuant.textContent = totalqan;
-    return totalqan;
-}
+    let Checkout = document.querySelector(".Checkout");
+    Checkout.addEventListener("click", () => {
+        if (cart.length > 1) {
+            alert(`You have ${cart.length} items in your cart🛍️. The items was successfully checkout. `)
+        }
+        else{
+            alert(`You have ${cart.length} item in your cart🛍️. The items was successfully checkout. `)
+        }
+    });
 
- 
-function totalMoney(){
-    let sum = totalP1 + totalP2 + totalP3;
-    totalAmount.textContent = `💰${sum}`;
-    return sum;
-}
+    function save(){
+        localStorage.setItem("cart", JSON.stringify(cart));
+        localStorage.setItem("totalPrice", JSON.stringify(totalPrice));
+    }
 
-Checkout.addEventListener("click", () => {
-    alert(`You have selected ${Quantity()} items in your cart, then the paid amount is 💰${totalMoney()}`);
+
 });
